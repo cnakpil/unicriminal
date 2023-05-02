@@ -4,9 +4,9 @@ __lua__
 ------------- init -------------
 
 anims={
- default={fr=5,128,130},
- left={fr=5,132,134},
- right={fr=5,136,138}
+	default={fr=5,128,130},
+	left={fr=5,132,134},
+	right={fr=5,136,138}
 }
 
 timer=0
@@ -93,13 +93,11 @@ function start_game()
 	
 	-- unicorn fart array
 	farts={}
-	
 end
--->8
+
 ------------ update ------------
 
 function update_game()
-	
 	-- reset unicorn state
 	uni_reset()
 	
@@ -134,7 +132,6 @@ function update_game()
 	
 	-- animate stars
 	animate_stars()
-	
 end
 
 function update_start()
@@ -148,36 +145,36 @@ function update_over()
 		mode="start"
 	end
 end
--->8
+
 ------- update functions -------
 
 function uni_reset()
- uni.spdx=0
+	uni.spdx=0
 	uni.spdy=0
 	reset_anim()
 end
 
 function uni_move()
- uni.x+=uni.spdx
+	uni.x+=uni.spdx
 	uni.y+=uni.spdy
 end
 
 function unifart_anim()
-
+	--TODO
 end
 
 function bullet_anim()
- for i=#bullets,1,-1 do
-		--move
-	 local cur_bullet=bullets[i]
-	 cur_bullet.y-=cur_bullet.spd
+	for i=#bullets,1,-1 do
+	--move
+	local cur_bullet=bullets[i]
+	cur_bullet.y-=cur_bullet.spd
 	 
-	 if cur_bullet.y<-8 then
-	 	del(bullets,cur_bullet)
-	 end
-	 
-	 --animate
-	 cur_bullet.spr+=1
+	if cur_bullet.y<-8 then
+		del(bullets,cur_bullet)
+	end
+	
+	--animate
+	cur_bullet.spr+=1
 		if cur_bullet.spr>68 then
 			cur_bullet.spr=66
 		end	 
@@ -185,50 +182,51 @@ function bullet_anim()
 end
 
 function muzzle_flash()
- if muzzle>0 then
+	if muzzle>0 then
 		muzzle-=1
 	end
 end
 
 function flame_anim(array,start,limit)
- for i=#array,1,-1 do
+	for i=#array,1,-1 do
 		cur_obj=array[i]
 		cur_obj.fspr+=1
-			if cur_obj.fspr>limit then
-				cur_obj.fspr=start
-			end	
+		if cur_obj.fspr>limit then
+			cur_obj.fspr=start
+		end	
 	end
 end
 
 function enemy_anim()
- for cur_enemy in all(enemies) do
-	 -- move enemy ship left and right
-	 -- change sprite based on motion
+	for cur_enemy in all(enemies) do
+		-- TODO
+		-- move enemy ship left and right
+		-- change sprite based on motion
 	end
 end
 
 function espawn_anim()
- for enemy in all(enemies) do
-  if enemy.y<20 then
-   enemy.y+=2
-  end
-  if enemy.y>=20 then
-   enemy.y+=1
-  end
- end
+	for enemy in all(enemies) do
+		if enemy.y<20 then
+			enemy.y+=2
+		end
+		if enemy.y>=20 then
+			enemy.y+=1
+		end
+	end
 end
--->8
+
 ----------- controls -----------
 
 function controls()
 	if btnp(0) then
-	 sidestep("left",-4)
+		sidestep("left",-4)
 	end
 	if btnp(1) then
 		sidestep("right",4)
 	end
 	if btnp(5) then
-	 load_bullet()
+		load_bullet()
 		sfx(0)
 		muzzle=4
 	end
@@ -238,13 +236,13 @@ function controls()
 end
 
 function sidestep(dir,spd)
-		uni.spdx=spd
- 	if uni.animindex>2 then
-	 	uni.animindex=1
-	 end
-	 uni.spr=anims[dir][uni.animindex]
-	 uni.animindex+=1
-	 timer=6
+	uni.spdx=spd
+	if uni.animindex>2 then
+		uni.animindex=1
+	end
+	uni.spr=anims[dir][uni.animindex]
+	uni.animindex+=1
+	timer=6
 end
 
 function reset_anim()
@@ -255,7 +253,7 @@ function reset_anim()
 	if timer==0 then
 		uniframe+=1
 		if uni.animindex>2 then
-	 	uni.animindex=1
+	 		uni.animindex=1
 		end
 		if uniframe%3==0 then
 			uni.spr=anims["default"][uni.animindex]
@@ -265,7 +263,7 @@ function reset_anim()
 end
 
 function load_bullet()
- local new_bullet={}
+	local new_bullet={}
 	new_bullet.x=uni.x
 	new_bullet.y=uni.y-3.5
 	new_bullet.spd=5
@@ -285,82 +283,85 @@ function set_bounds()
 		uni.x=0
 	end
 end
--->8
+
 ---------- collisions -----------
 
 --collision enemy+unibullets
 function shoot_enemy()
 	for enemy in all(enemies) do
-	 for bullet in all(bullets) do
-	  if col(enemy,bullet) then
-	   del(bullets,bullet)
-	   sfx(1)
-	   enemy.hp-=1
-	  end
-	  if enemy.hp<=0 then
-	   kill(enemy)
-	  end
-	 end
+		for bullet in all(bullets) do
+			if col(enemy,bullet) then
+				del(bullets,bullet)
+				sfx(1)
+				enemy.hp-=1
+			end
+			if enemy.hp<=0 then
+				kill(enemy)
+			end
+		end
 	end
 end
 
 --collision enemy+unicorn
 function uni_crash()
- for enemy in all(enemies) do
-  if col(enemy,uni) then
-   sfx(1)
-   enemy.hp-=1
-   cur_lives-=1
-  end
-  if enemy.hp<=0 then
-   kill(enemy)
-  end
-  if cur_lives<=0 then
-   mode="over"
-  end
- end
+	for enemy in all(enemies) do
+		if col(enemy,uni) then
+			sfx(1)
+			enemy.hp-=1
+			cur_lives-=1
+		end
+		if enemy.hp<=0 then
+			kill(enemy)
+		end
+		if cur_lives<=0 then
+			mode="over"
+		end
+	end
 end
 
 --collision ebullets+unicorn
+--TODO
 
 --kill enemy
 function kill(enemy)
- del(enemies,enemy)
- --explode sound
- --explode animation
+	del(enemies,enemy)
+	--TODO
+	--explode sound
+	--explode animation
 end
 
 --detect collisions
 --returns bool
 function col(a,b)
- if a.ghost or b.ghost then 
-  return false
- end
+	if a.ghost or b.ghost then 
+		return false
+	end
 
- local a_left=a.x
- local a_top=a.y
- local a_right=a.x+a.colw-1
- local a_bottom=a.y+a.colh-1
- 
- local b_left=b.x
- local b_top=b.y
- local b_right=b.x+b.colw-1
- local b_bottom=b.y+b.colh-1
+	local a_left=a.x
+	local a_top=a.y
+	local a_right=a.x+a.colw-1
+	local a_bottom=a.y+a.colh-1
 
- if a_top>b_bottom then 
- 	return false end
- if b_top>a_bottom then 
- 	return false end
- if a_left>b_right then 
- 	return false end
- if b_left>a_right then 
- 	return false end
- 
- return true
+	local b_left=b.x
+	local b_top=b.y
+	local b_right=b.x+b.colw-1
+	local b_bottom=b.y+b.colh-1
+
+	if a_top>b_bottom then 
+		return false end
+	if b_top>a_bottom then 
+		return false end
+	if a_left>b_right then 
+		return false end
+	if b_left>a_right then 
+		return false end
+
+	return true
 end
--->8
+
 ------------- draw -------------
 
+-- Draw game loop
 function draw_game()
 	cls(0)
 	starfield()
@@ -370,25 +371,27 @@ function draw_game()
 	
 	-- draw bullets
 	for bullet in all(bullets) do
-	 draw_spr(bullet)
+		draw_spr(bullet)
 	end
 	
 	-- draw enemies
 	for enemy in all(enemies) do
-	 draw_spr(enemy)
-	 spr(enemy.fspr,
-	 				enemy.x,
-	 				enemy.y-8)
+		draw_spr(enemy)
+		spr(enemy.fspr,
+			enemy.x,
+			enemy.y-8)
 	end
 	
 	-- muzzle flash
 	if muzzle>0 then
 		circfill(uni.x+3,
-											uni.y-2,
-											muzzle,
-											7)
+		uni.y-2,
+		muzzle,
+		7)
 	end
 	
+	--TODO
+	-- remove placeholder when actually tracking score
 	-- 32767 is the biggest number
 	print("score: "..score,45,3,12)
 	
@@ -400,39 +403,36 @@ function draw_game()
 			spr(14,i*9-8,2)
 		end
 	end
-	
 end
 
+-- Draw start screen
 function draw_start()
 	cls(7)
 	print("unicriminal",43,40,0)
 	print("press x or z key to start",15,80,blink())
 end
 
+-- Draw game over screen
 function draw_over()
  cls(8)
 	print("game over",45,40,2)
 	print("press x or z key to continue",9,80,7)
 end
 
-function print_test()
- 
-end
--->8
 -------- misc functions --------
 
 function starfield()
 	for i=1,#stars do
-	 local cur_star=stars[i]
-	 
-	 if cur_star.spd<1 then
-	 	cur_star.color=1
-	 	elseif cur_star.spd<1.5 then
+		local cur_star=stars[i]
+
+		if cur_star.spd<1 then
+			cur_star.color=1
+		elseif cur_star.spd<1.5 then
 			cur_star.color=13
 		end
 		pset(cur_star.x,
-							cur_star.y,
-							cur_star.color)
+			 cur_star.y,
+			 cur_star.color)
 	end
 end
 
@@ -441,25 +441,25 @@ function animate_stars()
 		local cur_star=stars[i]
 		cur_star.y+=cur_star.spd
 		if cur_star.y>128 then
-		 cur_star.y-=128
+			cur_star.y-=128
 		end
 	end
 end
 
 function blink()
 	local b_anim={8,8,8,8,8,8,8,8,
-															8,8,8,8,8,8,8,8,
-															9,9,9,9,9,9,9,9,
-															9,9,9,9,9,9,9,9,
-															11,11,11,11,11,11,
-															11,11,11,11,11,
-															11,11,11,11,11,
-															12,12,12,12,12,12,
-															12,12,12,12,12,
-															12,12,12,12,12,
-															13,13,13,13,13,13,
-															13,13,13,13,13,
-															13,13,13,13,13}
+				 8,8,8,8,8,8,8,8,
+				 9,9,9,9,9,9,9,9,
+				 9,9,9,9,9,9,9,9,
+				 11,11,11,11,11,11,
+				 11,11,11,11,11,
+				 11,11,11,11,11,
+				 12,12,12,12,12,12,
+				 12,12,12,12,12,
+				 12,12,12,12,12,
+				 13,13,13,13,13,13,
+				 13,13,13,13,13,
+				 13,13,13,13,13}
 	if blink_count>=#b_anim then
 		blink_count=1
 	end
@@ -468,12 +468,12 @@ end
 
 function draw_spr(new_spr)
 	spr(new_spr.spr,
-					new_spr.x,
-					new_spr.y)
+		new_spr.x,
+		new_spr.y)
 end
 
 function spawn_enemies()
- 
+--TODO
 end
 __gfx__
 0000000000022000000220000002200000000000000000000000000000000000000000000000000000000000000000000000000008800bb008800bb000000000
