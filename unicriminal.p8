@@ -25,22 +25,22 @@ function _update()
 	blink_count+=1
 
 	if mode=="game" then
- 	update_game()
- elseif mode=="start" then
-  update_start()
- elseif mode=="over" then
- 	update_over()
- end
+		update_game()
+	elseif mode=="start" then
+		update_start()
+	elseif mode=="over" then
+		update_over()
+	end
 end
 
 function _draw()
- if mode=="game" then
- 	draw_game()
- elseif mode=="start" then
- 	draw_start()
- elseif mode=="over" then
-  draw_over()
- end
+	if mode=="game" then
+		draw_game()
+	elseif mode=="start" then
+		draw_start()
+	elseif mode=="over" then
+    draw_over()
+	end
 end
 
 function start_game()
